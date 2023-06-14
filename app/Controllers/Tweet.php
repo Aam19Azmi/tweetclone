@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\TweetModel;
 
 class Tweet extends BaseController
 {
@@ -10,11 +11,18 @@ class Tweet extends BaseController
     var $sess;
     var $curUser;
 
+    var $tweetMdl;
+	var $profile;
+
     public function __construct()
     {
         $this->categories = (new \Config\AdtConfig())->getCategories();
         $this->sess = session();
         $this->curUser = $this->sess->get('currentuser');
+
+        $this->tweetMdl = new TweetModel();
+		$userMdl = new \App\Models\UserModel();
+        $this->profile = $userMdl->find($this->curUser['userid']);
     }
     
     public function index()
@@ -22,13 +30,19 @@ class Tweet extends BaseController
         $data['categories'] = $this->categories;
         $data['judul'] = 'Tweet Terbaru';
 
+        $data['profile'] = $this->profile;
+        $data['tweets'] = $this->tweetMdl->getLatest();
+
         return view('tweet_home', $data);
     }
 
     public function category($category)
     {
         $data['categories'] = $this->categories;
-        $data['judul'] = 'Tweet Kategori #'.$category;
+        $data['judul'] = 'Tweet Terbaru';
+
+        $data['profile'] = $this->profile;
+        $data['tweets'] = $this->tweetMdl->getByCategory($category);
 
         return view('tweet_home', $data);
     }
@@ -45,8 +59,10 @@ class Tweet extends BaseController
         return view('tweet_edit', $data);
     }
 
-    public function addTwet()
+    public function addTweet()
     {
+        $this->tweetMdl->newTweet($this->sess->get('currentuser'), $this->request->getPost());
+        $this->sess->setFlashdata('addtweet', 'success');
         return redirect()->to('/');
     }
 

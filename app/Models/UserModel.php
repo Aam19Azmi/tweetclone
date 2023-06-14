@@ -35,4 +35,14 @@ class UserModel extends Model
         $this->save($user);
         return [$user->username, $this->getInsertID()];
     }
+
+    public function login($username, $password)
+    {
+        $user = $this->where('username', $username)->first();
+        if($user && password_verify($password, $user->password)){
+            return [$user->username, $user->id];
+        } else {
+            return false;
+        }
+    }
 }
