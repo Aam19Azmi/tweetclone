@@ -11,13 +11,37 @@
                     Tweet baru berhasil diposting
                 </div>';
         }
+
+        $editstatus = $sess->get('edittweet');
+        if ($editstatus == 'success') {
+            echo '<div class="alert alert-success" role="alert">
+                    Tweet berhasil diedit / diperbaharui.
+                </div>';
+        }
+        if ($editstatus == 'error') {
+            echo '<div class="alert alert-danger" role="alert">
+                    Kesalahan pengeditan / pembaruan tweet.
+                </div>';
+        }
+
+        $delstatus = $sess->get('deltweet');
+        if ($delstatus == 'success') {
+            echo '<div class="alert alert-warning" role="alert">
+                    Tweet berhasil dihapus.
+                </div>'; 
+        }
+        if ($delstatus == 'error') {
+            echo '<div class="alert alert-danger" role="alert">
+                    Kesalahan penghapusan tweet.
+                </div>';
+        }
     ?>
     <!-- Akhir tambahan bagian notifikasi -->
     <div class="col-md-4">
         <div class="card mb-3" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
-                <?= img(['src'=>'images/no-avatar.jpg', 'class'=>'img-fluid rounded-start']) ?>
+                <?= img(['src'=>'images/no-profil.jpg', 'class'=>'img-fluid rounded-start']) ?>
                 </div>
                 <div class="col-md-8">
                 <div class="card-body">
@@ -52,10 +76,10 @@
 		<div class="col-md-8">
         <h2><?=$judul?></h2>
 
-        <?php foreach($tweets as $tweet){ ?>
+        <?php foreach ($tweets as $tweet) { ?>
         <div class="row" style="border-top: 1px solid #eee; padding-top: 10px; margin-bottom: 10px;">
             <div class="col-sm-2">
-                <?= img(['src'=>'images/no-avatar.jpg', 'class'=>'img-thumbnail']) ?>
+                <?= img(['src'=>'images/noavatar.jpg', 'class'=>'img-thumbnail']) ?>
             </div>
             <div class="col-sm-10">
                 <h4><?=$tweet->fullname?> <small>@<?=$tweet->username?></small></h4>
@@ -70,7 +94,7 @@
                     <?php 
                     $sess = session();
                     $curUser = $sess->get('currentuser');
-                    if($curUser['userid'] == $tweet->user_id): 
+                    if ($curUser['userid'] == $tweet->user_id): 
                     ?>
                     <span>
                         <a href="<?=base_url('/edit//'.$tweet->id)?>" class="btn btn-sm btn-warning">E</a>

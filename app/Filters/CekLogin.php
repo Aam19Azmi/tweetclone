@@ -16,7 +16,7 @@ class CekLogin implements FilterInterface
         }
     }
 
-    public function after(RequestInterface $request, ResponseInterface $response ,$argument = null)
+    public function after(RequestInterface $request, ResponseInterface $response, $argument = null)
     {
         
     }

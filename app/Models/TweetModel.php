@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Entities\Tweet;
 use CodeIgniter\Model;
 
 class TweetModel extends Model
 {
     // table name
-    protected $table            = 'tweets';
+    protected $table = 'tweets';
 
     // The table content
     protected  $allowedFields = [
@@ -22,7 +23,7 @@ class TweetModel extends Model
 
     public function newTweet($curUser, $post)
     {
-        $tweet = new \App\Entities\Tweet();
+        $tweet = new Tweet();
         $tweet->user_id = $curUser['userid'];
         $tweet->content = $post['content'];
         $tweet->category = $post['category'];
@@ -43,6 +44,32 @@ class TweetModel extends Model
                     ->where('category', $category)->orderBy('created_at', 'desc')
                     ->join('users', 'users.id = tweets.user_id');;
         return $query->findAll();
+    }
+
+    public function editTweet($post)
+    {
+        $tweet = $this->find($post['id']);
+        if ($tweet) {
+            $tweet->content = $post['content'];
+            $tweet->category = $post['category'];
+            $this->save($tweet);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function delTweet($user_id, $tweet_id)
+    {
+        $tweet = $this->find($tweet_id);
+        if ($tweet) {
+            if ($user_id == $tweet->user_id) {
+                $this->delete($tweet->id, true);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
 }

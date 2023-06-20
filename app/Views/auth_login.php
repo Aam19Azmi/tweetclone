@@ -10,14 +10,14 @@ $validation = \Config\Services::validation();
     <!-- Awal koding tambahan notifikasi -->
     <?php
     $sess = session();
-    if($sess->get('logout') == 'success'){
+    if ($sess->get('logout') == 'success') {
         echo '<div class="alert alert-success" role="alert">
             Berhasil logout. Silahkan login kembali.
             </div>';
     }
 
 		$err_login = $sess->get('login_error');
-    if($err_login){
+    if ($err_login) {
         echo '<div class="alert alert-danger" role="alert">
             '.$err_login.'
             </div>';

@@ -7,9 +7,32 @@ use App\Models\UserModel;
 
 class Auth extends BaseController
 {
+    var $categories;
+    var $sess;
+    var $curUser;
+
+    Public function __construct()
+    {
+        $this->categories = (new \Config\AdtConfig())->getCategories();
+        $this->sess = session();
+        $this->curUser = $this->sess->get('currentuser');
+    }
+
     public function index()
     {
         return view('auth_login');
+    }
+
+    public function addForm()
+    {
+        $data['categories'] =$this->categories;
+        return view('tweet_add', $data);
+    }
+
+    public function editForm()
+    {
+        $data['categories'] =$this->categories;
+        return view('tweet_edit', $data);
     }
 
     public function register()
@@ -24,7 +47,7 @@ class Auth extends BaseController
         if ($this->validate($userModel->rules)) {
             $result = $userModel->addUser($this->request->getPost());
             $sess = session();
-            $sess->set('currentuser', ['username' => $result[0], 'userid'   => $result[1]]);
+            $sess->set('currentuser', ['username' => $result[0 ], 'userid' => $result[1] ] );
             return redirect()->to('/');
         } else {
             $data['validation'] = $this->validator;
@@ -38,12 +61,12 @@ class Auth extends BaseController
         $sess = session();
         $userMdl = new UserModel();
         
-        if($this->validate($userMdl->loginRules)){
+        if ($this->validate($userMdl->loginRules)) {
             $result = $userMdl->login(
                     $this->request->getPost('username'), 
                     $this->request->getPost('password')
                 );
-            if($result){
+            if ($result) {
                 $sess->set('currentuser', 
                     ['username' => $result[0], 'userid' => $result[1]]);
                 return redirect()->to('/');

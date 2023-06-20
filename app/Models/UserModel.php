@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
     // table name
-    protected $table            = 'users';
+    protected $table = 'users';
     // The table content
     protected $allowedFields = [
         'username', 'password', 'fullname'
@@ -15,7 +15,7 @@ class UserModel extends Model
 
     protected $returnType = \App\Entities\User::class;
     public $rules = [
-        'username' => 'required|alpha_numeric|min_length[5]|is_unique[users.usernames]',
+        'username' => 'required|alpha_numeric|min_length[5]|is_unique[users.username]',
         'password' => 'required|min_length[5]',
         'confirmation' => 'required_with[password]|matches[password]',
         'fullname' => 'required|min_length[5]',
@@ -39,7 +39,7 @@ class UserModel extends Model
     public function login($username, $password)
     {
         $user = $this->where('username', $username)->first();
-        if($user && password_verify($password, $user->password)){
+        if ($user && password_verify($password, $user->password)) {
             return [$user->username, $user->id];
         } else {
             return false;
